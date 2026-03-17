@@ -8,11 +8,12 @@
         /* 確保全螢幕底色為黑 */
         html, body { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
-            background-color: #000; overflow: hidden; 
+            /* 💡 暫時移除這個，看看圖會不會出來 */
+            background-color: transparent; 
+            overflow: hidden; 
             color: white; font-family: sans-serif;
         }
 
-        /* 💡 修正：強制賦予背景圖寬高與顯示邏輯 */
         .bg {
             position: fixed; top: 0; left: 0; 
             width: 100vw !important; height: 100vh !important; 
@@ -26,7 +27,8 @@
 
         .blur {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.25);
+            /* 💡 暫時把這個 rgba 設為幾乎透明 (0.1)，確保不是被黑影擋住 */
+            background: rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
             z-index: -1;
         }
