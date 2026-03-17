@@ -11,14 +11,13 @@
             color: white; font-family: sans-serif;
         }
 
-        /* 💡 這裡已經替換成我幫你準備的穩定圖片網址 */
+        
         .bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://files.catbox.moe/r4at06.jpg') center/cover no-repeat;
+            background: url('https://files.catbox.moe/r4at06.jpg?v=1') center/cover no-repeat;
             z-index: -2;
         }
 
-        /* 毛玻璃遮罩，增加文字清晰度 */
         .blur {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.4); 
@@ -28,7 +27,6 @@
 
         canvas { position: fixed; top: 0; left: 0; z-index: 0; pointer-events: none; }
 
-        /* 內容佈局 */
         .content {
             position: relative; z-index: 10; height: 100vh;
             display: flex; justify-content: center; align-items: center; pointer-events: none;
@@ -73,70 +71,36 @@
         const canvas = document.getElementById('snowCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resize);
         resize();
 
         class Particle {
             constructor(x, y, isBg = false) {
-                this.x = x;
-                this.y = y;
-                this.isBg = isBg;
+                this.x = x; this.y = y; this.isBg = isBg;
                 this.size = Math.random() * (isBg ? 2 : 5) + 1;
                 this.speedY = Math.random() * 1.5 + 0.5;
                 this.speedX = (Math.random() - 0.5) * 1;
                 this.opacity = isBg ? Math.random() * 0.4 + 0.1 : 1;
             }
             update() {
-                this.y += this.speedY;
-                this.x += this.speedX;
-                if (this.isBg) {
-                    if (this.y > canvas.height) {
-                        this.y = -10;
-                        this.x = Math.random() * canvas.width;
-                    }
-                } else {
-                    this.opacity -= 0.012;
-                }
+                this.y += this.speedY; this.x += this.speedX;
+                if (this.isBg) { if (this.y > canvas.height) { this.y = -10; this.x = Math.random() * canvas.width; } }
+                else { this.opacity -= 0.012; }
             }
             draw() {
                 ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-                if (!this.isBg) {
-                    ctx.shadowBlur = 15;
-                    ctx.shadowColor = "white";
-                }
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+                if (!this.isBg) { ctx.shadowBlur = 15; ctx.shadowColor = "white"; }
             }
         }
-
-        // 初始化背景雪
-        for (let i = 0; i < 80; i++) {
-            particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height, true));
-        }
-
-        // 滑鼠噴發特效
-        window.addEventListener('mousemove', (e) => {
-            for (let i = 0; i < 3; i++) {
-                particles.push(new Particle(e.clientX, e.clientY, false));
-            }
-        });
-
+        for (let i = 0; i < 80; i++) { particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height, true)); }
+        window.addEventListener('mousemove', (e) => { for (let i = 0; i < 3; i++) { particles.push(new Particle(e.clientX, e.clientY, false)); } });
         function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.shadowBlur = 0;
+            ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.shadowBlur = 0;
             for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-                if (!particles[i].isBg && particles[i].opacity <= 0) {
-                    particles.splice(i, 1);
-                    i--;
-                }
+                particles[i].update(); particles[i].draw();
+                if (!particles[i].isBg && particles[i].opacity <= 0) { particles.splice(i, 1); i--; }
             }
             requestAnimationFrame(animate);
         }
