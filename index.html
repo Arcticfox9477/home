@@ -5,63 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FOX | SNOW PORTAL</title>
     <style>
-        body, html { 
+        /* 確保全螢幕底色為黑 */
+        html, body { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
-            overflow: hidden; background-color: #000;
+            background-color: #000; overflow: hidden; 
             color: white; font-family: sans-serif;
         }
 
-        /* 💡 使用 Raw 絕對路徑，確保 GitHub Pages 能直接抓到圖 */
+        /* 💡 修正：強制賦予背景圖寬高與顯示邏輯 */
         .bg {
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100vw; 
-            height: 100vh; 
-            background-image: url('https://raw.githubusercontent.com/Arcticfox9477/home/main/bg.jpg');
-            background-position: center;
+            position: fixed; top: 0; left: 0; 
+            width: 100vw !important; height: 100vh !important; 
+            background-image: url('https://raw.githubusercontent.com/Arcticfox9477/home/main/bg.jpg') !important;
             background-size: cover;
+            background-position: center;
             background-repeat: no-repeat;
             z-index: -2;
+            display: block !important;
         }
 
-        /* 調整遮罩濃度，確保背景圖清晰可見 */
         .blur {
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%;
-            background: rgba(0, 0, 0, 0.3); 
-            backdrop-filter: blur(6px); 
-            -webkit-backdrop-filter: blur(6px);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
             z-index: -1;
         }
 
         canvas { position: fixed; top: 0; left: 0; z-index: 0; pointer-events: none; }
-
-        .content {
-            position: relative; z-index: 10; height: 100vh;
-            display: flex; justify-content: center; align-items: center; 
-            pointer-events: none;
-        }
-
+        .content { position: relative; z-index: 10; height: 100vh; display: flex; justify-content: center; align-items: center; pointer-events: none; }
         .container { width: 320px; text-align: center; pointer-events: auto; }
-        .profile-pic { 
-            width: 90px; height: 90px; border-radius: 50%; 
-            margin: 0 auto 20px; border: 2px solid rgba(255,255,255,0.8);
-            background: rgba(255,255,255,0.1);
-            box-shadow: 0 0 20px rgba(255,255,255,0.2);
-        }
-
-        h1 { font-size: 2.2rem; letter-spacing: 6px; margin-bottom: 35px; text-shadow: 0 0 10px rgba(0,0,0,0.8); }
-        
-        .btn {
-            display: block; padding: 15px; margin-bottom: 12px; border-radius: 12px;
-            background: rgba(255,255,255,0.1); color: #fff; text-decoration: none;
-            border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px);
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+        .profile-pic { width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 20px; border: 2px solid #fff; background: rgba(255,255,255,0.1); }
+        h1 { font-size: 2.2rem; letter-spacing: 6px; margin-bottom: 35px; text-shadow: 2px 2px 5px #000; }
+        .btn { display: block; padding: 15px; margin-bottom: 12px; border-radius: 12px; background: rgba(255,255,255,0.1); color: #fff; text-decoration: none; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px); transition: 0.3s; }
         .btn:hover { background: rgba(255,255,255,0.2); transform: translateY(-5px); border-color: #fff; }
     </style>
 </head>
@@ -85,70 +60,34 @@
         const canvas = document.getElementById('snowCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resize);
         resize();
-
         class Particle {
             constructor(x, y, isBg = false) {
-                this.x = x;
-                this.y = y;
-                this.isBg = isBg;
+                this.x = x; this.y = y; this.isBg = isBg;
                 this.size = Math.random() * (isBg ? 2 : 5) + 1;
                 this.speedY = Math.random() * 1.5 + 0.5;
                 this.speedX = (Math.random() - 0.5) * 1;
                 this.opacity = isBg ? Math.random() * 0.4 + 0.1 : 1;
             }
             update() {
-                this.y += this.speedY;
-                this.x += this.speedX;
-                if (this.isBg) {
-                    if (this.y > canvas.height) {
-                        this.y = -10;
-                        this.x = Math.random() * canvas.width;
-                    }
-                } else {
-                    this.opacity -= 0.012;
-                }
+                this.y += this.speedY; this.x += this.speedX;
+                if (this.isBg) { if (this.y > canvas.height) { this.y = -10; this.x = Math.random() * canvas.width; } }
+                else { this.opacity -= 0.012; }
             }
             draw() {
                 ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-                if (!this.isBg) {
-                    ctx.shadowBlur = 15;
-                    ctx.shadowColor = "white";
-                }
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
             }
         }
-
-        // 背景雪
-        for (let i = 0; i < 80; i++) {
-            particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height, true));
-        }
-
-        // 滑鼠噴發
-        window.addEventListener('mousemove', (e) => {
-            for (let i = 0; i < 3; i++) {
-                particles.push(new Particle(e.clientX, e.clientY, false));
-            }
-        });
-
+        for (let i = 0; i < 80; i++) particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height, true));
+        window.addEventListener('mousemove', (e) => { for (let i = 0; i < 3; i++) particles.push(new Particle(e.clientX, e.clientY, false)); });
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.shadowBlur = 0;
             for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-                if (!particles[i].isBg && particles[i].opacity <= 0) {
-                    particles.splice(i, 1);
-                    i--;
-                }
+                particles[i].update(); particles[i].draw();
+                if (!particles[i].isBg && particles[i].opacity <= 0) { particles.splice(i, 1); i--; }
             }
             requestAnimationFrame(animate);
         }
