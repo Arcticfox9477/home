@@ -5,16 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FOX | SNOW PORTAL</title>
     <style>
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            overflow: hidden; background-color: #000;
-            color: white; font-family: sans-serif;
-        }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #000; color: white; font-family: sans-serif; }
 
-        
+        /* 💡 這裡就是關鍵：直接寫檔名，GitHub 就會自動找旁邊的圖 */
         .bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://files.catbox.moe/r4at06.jpg?v=1') center/cover no-repeat;
+            background: url('bg.jpg') center/cover no-repeat;
             z-index: -2;
         }
 
@@ -33,30 +29,21 @@
         }
 
         .container { width: 320px; text-align: center; pointer-events: auto; }
-        .profile-pic { 
-            width: 90px; height: 90px; border-radius: 50%; 
-            margin: 0 auto 20px; border: 2px solid rgba(255,255,255,0.8);
-            background: rgba(255,255,255,0.1);
-            box-shadow: 0 0 20px rgba(255,255,255,0.2);
-        }
-
-        h1 { font-size: 2.2rem; letter-spacing: 6px; margin-bottom: 35px; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        .profile-pic { width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 20px; border: 2px solid #fff; background: rgba(255,255,255,0.1); }
+        h1 { font-size: 2.2rem; letter-spacing: 6px; margin-bottom: 35px; }
         
         .btn {
             display: block; padding: 15px; margin-bottom: 12px; border-radius: 12px;
-            background: rgba(255,255,255,0.08); color: #fff; text-decoration: none;
-            border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px);
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(255,255,255,0.1); color: #fff; text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px); transition: 0.3s;
         }
         .btn:hover { background: rgba(255,255,255,0.2); transform: translateY(-5px); border-color: #fff; }
     </style>
 </head>
 <body>
-
     <div class="bg"></div>
     <div class="blur"></div>
     <canvas id="snowCanvas"></canvas>
-
     <div class="content">
         <div class="container">
             <div class="profile-pic"></div>
@@ -74,7 +61,6 @@
         function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resize);
         resize();
-
         class Particle {
             constructor(x, y, isBg = false) {
                 this.x = x; this.y = y; this.isBg = isBg;
@@ -94,8 +80,8 @@
                 if (!this.isBg) { ctx.shadowBlur = 15; ctx.shadowColor = "white"; }
             }
         }
-        for (let i = 0; i < 80; i++) { particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height, true)); }
-        window.addEventListener('mousemove', (e) => { for (let i = 0; i < 3; i++) { particles.push(new Particle(e.clientX, e.clientY, false)); } });
+        for (let i = 0; i < 80; i++) particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height, true));
+        window.addEventListener('mousemove', (e) => { for (let i = 0; i < 3; i++) particles.push(new Particle(e.clientX, e.clientY, false)); });
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.shadowBlur = 0;
             for (let i = 0; i < particles.length; i++) {
