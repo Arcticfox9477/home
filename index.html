@@ -5,20 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FOX | SNOW PORTAL</title>
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #000; color: white; font-family: sans-serif; }
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background-color: #000; /* 底部墊黑色 */
+        }
 
-        /* 💡 這裡就是關鍵：直接寫檔名，GitHub 就會自動找旁邊的圖 */
         .bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://raw.githubusercontent.com/Arcticfox9477/home/main/bg.jpg') center/cover no-repeat;
+            position: fixed; top: 0; left: 0; 
+            width: 100vw; height: 100vh; /* 💡 強制填滿螢幕寬高 */
+            /* 💡 請貼上你剛剛複製的那串 raw.githubusercontent 網址 */
+            background: url('https://raw.githubusercontent.com/Arcticfox9477/home/main/bg.jpg') center center / cover no-repeat;
             z-index: -2;
+            display: block; /* 💡 確保它是顯示狀態 */
         }
 
         .blur {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            
-            background: rgba(0, 0, 0, 0); 
-            backdrop-filter: none;
+            background: rgba(0, 0, 0, 0.3); /* 💡 先調淺一點，看圖有沒有出來 */
+            backdrop-filter: blur(5px);
             z-index: -1;
         }
 
