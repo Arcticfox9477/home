@@ -12,19 +12,18 @@
             color: white; font-family: sans-serif;
         }
 
-        /* 🖼️ 背景圖層修正 */
+        /* 🖼️ 背景圖層：直接使用檔名 (最標準且最穩定的寫法) */
         .bg {
             position: fixed; 
             top: 0; 
             left: 0; 
-            width: 100vw; 
-            height: 100vh; 
-            /* 使用 shorthand 寫法確保屬性同時生效，並加上 backup 顏色 */
-            background: #111 url('https://raw.githubusercontent.com/Arcticfox9477/home/main/bg.jpg') no-repeat center center;
+            width: 100%; 
+            height: 100%; 
+            background-image: url('bg.jpg'); /* 改成這樣！ */
             background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             z-index: -2;
-            /* 確保背景層在最底層 */
-            transform: translateZ(0); 
         }
 
         /* 🌫️ 模糊遮罩層 */
@@ -34,7 +33,7 @@
             left: 0; 
             width: 100%; 
             height: 100%;
-            background: rgba(0, 0, 0, 0.2); /* 稍微加深一點點，增加對比 */
+            background: rgba(0, 0, 0, 0.2);
             backdrop-filter: blur(8px); 
             -webkit-backdrop-filter: blur(8px);
             z-index: -1;
@@ -44,14 +43,16 @@
         .content { position: relative; z-index: 10; height: 100vh; display: flex; justify-content: center; align-items: center; pointer-events: none; }
         .container { width: 320px; text-align: center; pointer-events: auto; }
 
-        /* 🖼️ 大頭貼設定 */
+        /* 🖼️ 大頭貼設定：一樣直接寫檔名 */
         .profile-pic { 
             width: 100px; height: 100px; 
             border-radius: 50%; 
             margin: 0 auto 15px; 
             border: 2px solid rgba(255,255,255,0.8); 
-            background: url('https://raw.githubusercontent.com/Arcticfox9477/home/main/28599.jpg') no-repeat center center;
+            background-image: url('28599.jpg'); /* 改成這樣！ */
             background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             box-shadow: 0 0 25px rgba(255,255,255,0.2);
         }
 
@@ -103,19 +104,19 @@
             <div class="profile-pic"></div>
             <h1>Arctic fox</h1>
             
-            <a href="你的YouTube連結" target="_blank" class="btn">
+            <a href="#" target="_blank" class="btn">
                 <img src="https://img.icons8.com/?size=100&id=19318&format=png&color=ffffff" class="btn-icon"> YOUTUBE
             </a>
             
-            <a href="你的Discord連結" target="_blank" class="btn">
+            <a href="#" target="_blank" class="btn">
                 <img src="https://img.icons8.com/?size=100&id=30998&format=png&color=ffffff" class="btn-icon"> DISCORD
             </a>
             
-            <a href="你的Steam連結" target="_blank" class="btn">
+            <a href="#" target="_blank" class="btn">
                 <img src="https://img.icons8.com/?size=100&id=113032&format=png&color=ffffff" class="btn-icon"> STEAM
             </a>
 
-            <a href="你的IG連結" target="_blank" class="btn">
+            <a href="#" target="_blank" class="btn">
                 <img src="https://img.icons8.com/?size=100&id=32309&format=png&color=ffffff" class="btn-icon"> INSTAGRAM
             </a>
         </div>
@@ -160,12 +161,10 @@
             }
         }
 
-        // 初始化背景雪花
         for (let i = 0; i < 100; i++) {
             particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height, true));
         }
 
-        // 滑鼠移動特效
         window.addEventListener('mousemove', (e) => { 
             for (let i = 0; i < 2; i++) {
                 particles.push(new Particle(e.clientX, e.clientY, false)); 
