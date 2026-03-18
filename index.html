@@ -36,17 +36,18 @@
         .profile-pic { width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 20px; border: 2px solid #fff; background: rgba(255,255,255,0.1); }
         h1 { font-size: 2.2rem; letter-spacing: 6px; margin-bottom: 35px; text-shadow: 2px 2px 5px #000; }
 
-        /* 💡 調整按鈕透明度：background 改為 0.05 讓它更透 */
         .btn { 
-            display: block; 
+            display: flex;          /* 💡 改為 Flex 佈局以利圖標對齊 */
+            align-items: center;    /* 垂直居中 */
+            justify-content: center; /* 水平置中 */
             padding: 15px; 
             margin-bottom: 12px; 
             border-radius: 12px; 
             background: rgba(255, 255, 255, 0.05); 
             color: #fff;
-            font-size: 15px;         /* 字體大小：變大一點 */
-            font-weight: 200;        /* 字體粗細：稍微加粗 */
-            letter-spacing: 2px;     /* 字距：拉開更有設計感 */
+            font-size: 14px;         /* 稍微縮小一點點，更有高級感 */
+            font-weight: 300;        
+            letter-spacing: 2px;     
             text-decoration: none; 
             border: 1px solid rgba(255, 255, 255, 0.15); 
             backdrop-filter: blur(4px); 
@@ -54,7 +55,14 @@
             transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
         }
 
-        /* 滑鼠移上去時的效果 */
+        /* 💡 設定去背圖片的樣式 */
+        .btn-icon {
+            width: 20px;            /* 圖標大小 */
+            height: 20px;
+            margin-right: 12px;     /* 圖標與文字的距離 */
+            object-fit: contain;
+        }
+
         .btn:hover { 
             background: rgba(255, 255, 255, 0.15); 
             transform: translateY(-5px); 
@@ -72,9 +80,18 @@
         <div class="container">
             <div class="profile-pic"></div>
             <h1>Arctic fox</h1>
-            <a href="#" class="btn">🎬 VIDEO WORKS</a>
-            <a href="#" class="btn">💬 DISCORD</a>
-            <a href="#" class="btn">🤝 STEAM</a>
+            
+            <a href="#" class="btn">
+                <img src="https://img.icons8.com/?size=100&id=117912&format=png&color=ffffff" class="btn-icon"> VIDEO WORKS
+            </a>
+            
+            <a href="#" class="btn">
+                <img src="https://img.icons8.com/?size=100&id=30998&format=png&color=ffffff" class="btn-icon"> DISCORD
+            </a>
+            
+            <a href="#" class="btn">
+                <img src="https://img.icons8.com/?size=100&id=XiS98InE86z5&format=png&color=ffffff" class="btn-icon"> STEAM
+            </a>
         </div>
     </div>
 
