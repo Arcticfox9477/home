@@ -141,17 +141,24 @@
                 this.speedX = (Math.random() - 0.5) * 1;
                 this.opacity = isBg ? Math.random() * 0.5 + 0.2 : 1;
             }
-            update() {
-                this.y += this.speedY; this.x += this.speedX;
+            
+            // 🌟 修正點 1：加入 timeScale 參數
+            update(timeScale = 1) {
+                // 移動距離乘上時間比例
+                this.y += this.speedY * timeScale; 
+                this.x += this.speedX * timeScale;
+                
                 if (this.isBg) { 
                     if (this.y > canvas.height) { 
                         this.y = -10; 
                         this.x = Math.random() * canvas.width; 
                     } 
                 } else { 
-                    this.opacity -= 0.015; 
+                    // 滑鼠雪花的淡出速度也乘上時間比例
+                    this.opacity -= 0.015 * timeScale; 
                 }
             }
+            
             draw() {
                 ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
                 ctx.beginPath(); 
@@ -160,21 +167,41 @@
             }
         }
 
+        // 保留你設定的 200 顆背景雪花
         for (let i = 0; i < 200; i++) {
             particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height, true));
         }
 
+        // 保留你設定的滑鼠移動 1 顆雪花特效
         window.addEventListener('mousemove', (e) => { 
             for (let i = 0; i < 1; i++) {
                 particles.push(new Particle(e.clientX, e.clientY, false)); 
             }
         });
 
-        function animate() {
+        // 🌟 修正點 2：加入時間差 (Delta Time) 運算
+        let lastTime = 0;
+
+        function animate(currentTime) {
+            // 第一次執行時，記錄當下時間
+            if (!lastTime) lastTime = currentTime;
+            
+            // 計算距離上一幀過了多少毫秒
+            const deltaTime = currentTime - lastTime;
+            lastTime = currentTime;
+
+            // 以 60Hz 螢幕的 16.66 毫秒為「基準 1 倍速」
+            let timeScale = deltaTime / 16.66;
+            
+            // 防護機制：避免切換分頁太久，切回來時雪花瞬間大暴走
+            if (timeScale > 5) timeScale = 1;
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
             for (let i = 0; i < particles.length; i++) {
-                particles[i].update(); 
+                particles[i].update(timeScale); // 🌟 將時間比例傳給雪花
                 particles[i].draw();
+                
                 if (!particles[i].isBg && particles[i].opacity <= 0) { 
                     particles.splice(i, 1); 
                     i--; 
@@ -182,7 +209,9 @@
             }
             requestAnimationFrame(animate);
         }
-        animate();
+        
+        // 啟動動畫
+        requestAnimationFrame(animate);
     </script>
 </body>
 </html>
