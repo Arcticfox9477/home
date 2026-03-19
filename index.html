@@ -7,18 +7,19 @@
     <style>
         html, body { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
-            overflow: hidden; 
+            overflow-x: hidden; /* 隱藏左右捲軸 */
+            overflow-y: auto;   /* 🌟 允許上下滑動 */
             color: white; font-family: sans-serif;
         }
 
-        /* 🖼️ 背景圖層：直接使用檔名 (最標準且最穩定的寫法) */
+        /* 🖼️ 背景圖層 */
         .bg {
             position: fixed; 
             top: 0; 
             left: 0; 
             width: 100%; 
             height: 100%; 
-            background-image: url('bg.jpg'); /* 改成這樣！ */
+            background-image: url('bg.jpg'); 
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -39,16 +40,59 @@
         }
 
         canvas { position: fixed; top: 0; left: 0; z-index: 0; pointer-events: none; }
-        .content { position: relative; z-index: 10; height: 100vh; display: flex; justify-content: center; align-items: center; pointer-events: none; }
-        .container { width: 320px; text-align: center; pointer-events: auto; }
+        
+        /* 整個內容區塊的基本設定 (手機版預設為上下排版) */
+        .content { 
+            position: relative; 
+            z-index: 10; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; /* 手機版：上下排版 */
+            align-items: center; 
+            padding: 40px 20px; 
+            gap: 40px; 
+            box-sizing: border-box;
+            pointer-events: none; 
+        }
 
-        /* 🖼️ 大頭貼設定：一樣直接寫檔名 */
+        /* 👈 左邊面板 (按鈕區) */
+        .left-panel { 
+            width: 100%; 
+            max-width: 320px; 
+            text-align: center; 
+            pointer-events: auto; 
+        }
+
+        /* 👉 右邊面板 (用來包住所有音樂、影片區塊) */
+        .right-panel {
+            width: 100%;
+            max-width: 500px;
+            pointer-events: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* 右邊的磨砂玻璃卡片樣式 */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 25px;
+            box-sizing: border-box;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        /* 大頭貼設定 */
         .profile-pic { 
             width: 100px; height: 100px; 
             border-radius: 50%; 
             margin: 0 auto 15px; 
             border: 2px solid rgba(255,255,255,0.8); 
-            background-image: url('28599.jpg'); /* 改成這樣！ */
+            background-image: url('28599.jpg'); 
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -90,6 +134,29 @@
             border-color: rgba(255, 255, 255, 0.6); 
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
+
+        /* 💻 🌟 電腦版專屬魔法 (螢幕大於 800px 時觸發) 🌟 */
+        @media (min-width: 800px) {
+            .content {
+                flex-direction: row; /* 變成左右排版 */
+                align-items: flex-start; /* 讓左右兩邊各自獨立高度 */
+                justify-content: center;
+                gap: 80px; /* 左右間距 */
+                max-width: 1200px; 
+                margin: 0 auto; 
+                padding: 80px 20px;
+            }
+
+            .left-panel {
+                position: sticky; /* 🌟 核心魔法：黏住！ */
+                top: 80px; /* 距離頂端 80px */
+            }
+
+            .right-panel {
+                flex: 1;
+                max-width: 600px; /* 電腦版右邊面板可以寬一點 */
+            }
+        }
     </style>
 </head>
 <body>
@@ -99,25 +166,53 @@
     <canvas id="snowCanvas"></canvas>
 
     <div class="content">
-        <div class="container">
+        <div class="left-panel">
             <div class="profile-pic"></div>
             <h1>Arctic fox</h1>
             
             <a href="https://www.youtube.com/@arcticfox9477" target="_blank" class="btn">
-            <img src="https://img.icons8.com/?size=100&id=19318&format=png&color=ffffff" class="btn-icon"> YOUTUBE
+                <img src="https://img.icons8.com/?size=100&id=19318&format=png&color=ffffff" class="btn-icon"> YOUTUBE
             </a>
             
             <a href="#" onclick="navigator.clipboard.writeText('這裡填你的Discord帳號'); alert('已複製 Discord 帳號！快去加我好友吧！\nDiscord copied! Add me!'); return false;" class="btn">
-            <img src="https://img.icons8.com/?size=100&id=30998&format=png&color=ffffff" class="btn-icon"> DISCORD
+                <img src="https://img.icons8.com/?size=100&id=30998&format=png&color=ffffff" class="btn-icon"> DISCORD
             </a>
             
             <a href="https://steamcommunity.com/id/fox_tw" target="_blank" class="btn">
-                <img src="steam.png" class="btn-icon"> STEAM
+                <img src="steam.jpg" class="btn-icon"> STEAM
             </a>
 
             <a href="#" target="_blank" class="btn">
                 <img src="https://img.icons8.com/?size=100&id=32309&format=png&color=ffffff" class="btn-icon"> INSTAGRAM
             </a>
+
+            <div style="margin-top: 20px; display: flex; justify-content: center; opacity: 0.7;">
+                <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Farcticfox9477.github.io%2Fhome&count_bg=%23FFFFFF&title_bg=%23000000&title=VISITORS&edge_flat=true" alt="Hits">
+            </div>
+        </div>
+
+        <div class="right-panel">
+            
+            <div class="glass-card">
+                <h2 style="font-size: 1.1rem; letter-spacing: 2px; margin: 0 0 15px 0;">🎵 NOW PLAYING</h2>
+                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <div class="glass-card">
+                <h2 style="font-size: 1.1rem; letter-spacing: 2px; margin: 0 0 15px 0;">📺 FAVORITE VIDEO</h2>
+                <iframe width="100%" height="250" style="border-radius: 12px;" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+            
+            <div class="glass-card">
+                <h2 style="font-size: 1.1rem; letter-spacing: 2px; margin: 0 0 15px 0;">📝 ABOUT</h2>
+                <p style="font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.8); margin: 0;">
+                    這裡是右側的內容區塊。當你在電腦版往下滑動時，這個區塊會跟著捲動，但左側的大頭貼和按鈕會牢牢固定在原本的位置！
+                </p>
+                <br>
+                <p style="font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.8); margin: 0;">向下捲動測試...</p>
+                <br><br><br><br><br><br><br><br><br><br>
+            </div>
+
         </div>
     </div>
 
@@ -142,9 +237,7 @@
                 this.opacity = isBg ? Math.random() * 0.5 + 0.2 : 1;
             }
             
-            // 🌟 修正點 1：加入 timeScale 參數
             update(timeScale = 1) {
-                // 移動距離乘上時間比例
                 this.y += this.speedY * timeScale; 
                 this.x += this.speedX * timeScale;
                 
@@ -154,7 +247,6 @@
                         this.x = Math.random() * canvas.width; 
                     } 
                 } else { 
-                    // 滑鼠雪花的淡出速度也乘上時間比例
                     this.opacity -= 0.015 * timeScale; 
                 }
             }
@@ -167,39 +259,30 @@
             }
         }
 
-        // 保留你設定的 200 顆背景雪花
         for (let i = 0; i < 200; i++) {
             particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height, true));
         }
 
-        // 保留你設定的滑鼠移動 1 顆雪花特效
         window.addEventListener('mousemove', (e) => { 
             for (let i = 0; i < 1; i++) {
                 particles.push(new Particle(e.clientX, e.clientY, false)); 
             }
         });
 
-        // 🌟 修正點 2：加入時間差 (Delta Time) 運算
         let lastTime = 0;
 
         function animate(currentTime) {
-            // 第一次執行時，記錄當下時間
             if (!lastTime) lastTime = currentTime;
-            
-            // 計算距離上一幀過了多少毫秒
             const deltaTime = currentTime - lastTime;
             lastTime = currentTime;
 
-            // 以 60Hz 螢幕的 16.66 毫秒為「基準 1 倍速」
             let timeScale = deltaTime / 16.66;
-            
-            // 防護機制：避免切換分頁太久，切回來時雪花瞬間大暴走
             if (timeScale > 5) timeScale = 1;
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
             for (let i = 0; i < particles.length; i++) {
-                particles[i].update(timeScale); // 🌟 將時間比例傳給雪花
+                particles[i].update(timeScale); 
                 particles[i].draw();
                 
                 if (!particles[i].isBg && particles[i].opacity <= 0) { 
@@ -210,7 +293,6 @@
             requestAnimationFrame(animate);
         }
         
-        // 啟動動畫
         requestAnimationFrame(animate);
     </script>
 </body>
